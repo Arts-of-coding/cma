@@ -11,4 +11,5 @@ setup(
             'SVM_prediction=cma.SVM_prediction:main'
         ]
     },
+    package_data={"cma.data": ["*.csv", "*.h5ad"]},
 )
