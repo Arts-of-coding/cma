@@ -10,7 +10,7 @@ import rpy2.robjects as robjects
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.metrics import confusion_matrix
 from scanpy import read_h5ad
-from importlib.resources import files
+from importlib_resources import files
 
 def SVM_prediction(reference_H5AD, query_H5AD, LabelsPathTrain, OutputDir, rejected=False, Threshold_rej=0.7,meta_atlas=False):
     '''
