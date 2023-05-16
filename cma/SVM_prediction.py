@@ -23,23 +23,23 @@ def SVM_prediction(reference_H5AD, query_H5AD, LabelsPathTrain, OutputDir, rejec
         cells-genes matrix with cell unique barcodes as row names and gene names as column names.
     LabelsPathTrain : Cell population annotations file path matching the training data (.csv).
     OutputDir : Output directory defining the path of the exported file.
-    rejected: If set to True, then the SVMrejected option is chosen. Default: False.
+    rejected: If the flag is added, then the SVMrejected option is chosen. Default: False.
     Threshold_rej : Threshold used when rejecting the cells, default is 0.7.
-    meta_atlas : If set to true (default) the predictions will use the meta-atlas data,
+    meta_atlas : If the flag is added the predictions will use the corneal meta-atlas data,
     meaning that reference_H5AD and LabelsPathTrain do not need to be specified.
     '''
     print("Reading in the reference and query H5AD objects")
     
-    # Once configured well, this will be added
-    # if meta_atlas==False:
-      # training=read_h5ad(reference_H5AD) 
-    # if meta_atlas==True:
-      # meta_dir=files('mypkg.data').joinpath('meta.h5ad')
-      # training=read_h5ad(meta_dir) 
-    
-    training=read_h5ad(reference_H5AD) 
+    # Load in the cma.h5ad object or use a different reference
+    if meta_atlas==False:
+        training=read_h5ad(reference_H5AD) 
+    if meta_atlas==True:
+        meta_dir=files('cma.data').joinpath('cma_meta_atlas.h5ad')
+        training=read_h5ad(meta_dir) 
+
+    # Load in the test data
     testing=read_h5ad(query_H5AD)
-    
+ 
     print("Generating training and testing matrices from the H5AD objects")
     
     # training data
