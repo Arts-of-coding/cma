@@ -5,12 +5,14 @@ import pandas as pd
 import scanpy as sc
 import time as tm
 import seaborn as sns
-from sklearn.svm import LinearSVC
 import rpy2.robjects as robjects
+import matplotlib.pyplot as plt
+from sklearn.svm import LinearSVC
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.metrics import confusion_matrix
 from scanpy import read_h5ad
-from importlib_resources import files
+from importlib.resources import files
+
 
 def SVM_prediction(reference_H5AD, query_H5AD, LabelsPathTrain, OutputDir, rejected=False, Threshold_rej=0.7,meta_atlas=False):
     '''
@@ -124,6 +126,156 @@ def SVM_prediction(reference_H5AD, query_H5AD, LabelsPathTrain, OutputDir, rejec
         
         # Save the predicted labels
         pred.to_csv(str(OutputDir) + "SVM_Pred_Labels.csv", index =False)
+
+def SVM_prediction_import(query_H5AD, OutputDir, SVM_type, replicates, meta_atlas=True, show_umap=True, show_bar=True):
+    '''
+    Imports the output of the SVM_predictor and saves it to the query_H5AD.
+
+    Parameters:
+    query_H5AD : H5AD file of datasets of interest.
+    OutputDir : Output directory defining the path of the exported SVM_predictions.
+    SVM_type: Type of SVM prediction, SVM (default) or SVMrej.
+    Replicates: 
+    meta_atlas:
+    show_umap:
+    show_bar:
+    '''
+    print("Reading query data")
+    adata=read_h5ad(query_H5AD)
+    SVM_key=f"{SVM_type}_predicted"
+
+    # Load in the object and add the predicted labels
+    print("Adding predictions to query data")
+    for file in os.listdir(OutputDir):
+        if file.endswith('.csv'):
+            if not 'rej' in file:
+                filedir= OutputDir+file
+                #print(filedir)
+                influence_data= pd.read_csv(filedir,sep=',',index_col=0)
+                #print(influence_data)
+                influence_data=influence_data.index.tolist()
+                adata.obs["SVM_predicted"]=influence_data
+            if 'rej_Pred' in file:
+                filedir= OutputDir+file
+                #print(filedir)
+                influence_data= pd.read_csv(filedir,sep=',',index_col=0)
+                #print(influence_data)
+                influence_data=influence_data.index.tolist()
+                adata.obs["SVMrej_predicted"]=influence_data
+            if 'rej_Prob' in file:
+                filedir= OutputDir+file
+                #print(filedir)
+                influence_data= pd.read_csv(filedir,sep=',',index_col=0)
+                #print(influence_data)
+                influence_data=influence_data.index.tolist()
+                adata.obs["SVMrej_predicted_prob"]=influence_data
+
+    # Plot UMAP if selected
+    print("Plotting UMAP")
+    sc.set_figure_params(figsize=(5, 5))
+    if show_umap == True:
+        if meta_atlas == True:
+            category_order_list = ["LSC", "LESC","LE","Cj","CE","qSK","SK","TSK","CF","EC","Ves","Mel","IC","nm-cSC","MC","Unknown"]
+            adata.obs[SVM_key] = adata.obs[SVM_key].astype("category")
+            adata.obs[SVM_key] = adata.obs[SVM_key].cat.set_categories(category_order_list, ordered=True)
+            sc.pl.umap(adata, color=SVM_key,palette={
+                        "LSC": "#66CD00",
+                        "LESC": "#76EE00",
+                        "LE": "#66CDAA",
+                        "Cj": "#191970",
+                        "CE": "#1874CD",
+                        "qSK": "#FFB90F",
+                        "SK": "#EEAD0E",
+                        "TSK": "#FF7F00",
+                        "CF": "#CD6600",
+                        "EC": "#87CEFA",
+                        "Ves": "#8B2323",
+                        "Mel": "#FFFF00",
+                        "IC": "#00CED1",
+                        "nm-cSC": "#FF0000",
+                        "MC": "#CD3700",
+                        "Unknown": "#808080",
+                        },show=False,save=f"_{SVM_key}.pdf")
+        else:
+            sc.pl.umap(adata, color=SVM_key,show=False,save=f"_{SVM_key}.pdf")
+            
+    # Plot absolute and relative barcharts across replicates
+    print("Plotting barcharts")
+    if show_bar == True:
+        sc.set_figure_params(figsize=(15, 5))
+        key=SVM_key
+        obs_1 = key
+        obs_2 = replicates
+
+        n_categories = {x : len(adata.obs[x].cat.categories) for x in [obs_1, obs_2]}
+        df = adata.obs[[obs_2, obs_1]].values
+
+        obs2_clusters = adata.obs[obs_2].cat.categories.tolist()
+        obs1_clusters = adata.obs[obs_1].cat.categories.tolist()
+        obs1_to_obs2 = {k: np.zeros(len(obs2_clusters), dtype="i")
+                           for k in obs1_clusters}
+        obs2_to_obs1 = {k: np.zeros(len(obs1_clusters), dtype="i")
+                           for k in obs2_clusters}
+        obs2_to_obs1
+
+        for b, l in df:
+            obs2_to_obs1[b][obs1_clusters.index(str(l))] += 1
+            obs1_to_obs2[l][obs2_clusters.index(str(b))] += 1
+
+        df = pd.DataFrame.from_dict(obs2_to_obs1,orient = 'index').reset_index()
+        df = df.set_index(["index"])
+        df.columns=obs1_clusters
+        df.index.names = ['Replicate']
+
+        if meta_atlas == True:
+            ordered_list=["LSC", "LESC","LE","Cj","CE","qSK","SK","TSK","CF","EC","Ves","Mel","IC","nm-cSC","MC","Unknown"]
+            palette={
+                        "LSC": "#66CD00",
+                        "LESC": "#76EE00",
+                        "LE": "#66CDAA",
+                        "Cj": "#191970",
+                        "CE": "#1874CD",
+                        "qSK": "#FFB90F",
+                        "SK": "#EEAD0E",
+                        "TSK": "#FF7F00",
+                        "CF": "#CD6600",
+                        "EC": "#87CEFA",
+                        "Ves": "#8B2323",
+                        "Mel": "#FFFF00",
+                        "IC": "#00CED1",
+                        "nm-cSC": "#FF0000",
+                        "MC": "#CD3700",
+                        "Unknown": "#808080",
+                        }
+            lstval = [palette[key] for key in ordered_list]
+            sorter=ordered_list
+            df = df[sorter]
+
+        stacked_data = df.apply(lambda x: x*100/sum(x), axis=1)
+        stacked_data=stacked_data.iloc[:, ::-1]
+
+        fig, ax =plt.subplots(1,2)
+        if meta_atlas == True:
+            df.plot(kind="bar", stacked=True, ax=ax[0], legend = False,color=lstval, rot=45, title='Absolute number of cells')
+        else:
+            df.plot(kind="bar", stacked=True, ax=ax[0], legend = False, rot=45, title='Absolute number of cells')
+
+        fig.legend(loc=7,title="Cell state")
+
+        if meta_atlas == True:
+            stacked_data.plot(kind="bar", stacked=True, legend = False, ax=ax[1],color=lstval[::-1], rot=45, title='Percentage of cells')
+        else:
+            stacked_data.plot(kind="bar", stacked=True, legend = False, ax=ax[1], rot=45, title='Percentage of cells')
+
+        fig.tight_layout()
+        fig.subplots_adjust(right=0.9)
+        fig.savefig(f"figures/{SVM_key}_bar.pdf", bbox_inches='tight')
+        plt.close(fig)
+    else:
+        None
+    print("Saving H5AD file")
+    adata.write_h5ad(f"{SVM_key}.h5ad")
+    return
 
 def main():
     # Create the parser
