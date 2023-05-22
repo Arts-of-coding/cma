@@ -10,8 +10,9 @@ import rpy2.robjects as robjects
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.metrics import confusion_matrix
 from scanpy import read_h5ad
+from importlib_resources import files
 
-def SVM_prediction(reference_H5AD, query_H5AD, LabelsPathTrain, OutputDir, rejected=False, Threshold_rej=0.7):
+def SVM_prediction(reference_H5AD, query_H5AD, LabelsPathTrain, OutputDir, rejected=False, Threshold_rej=0.7,meta_atlas=False):
     '''
     run baseline classifier: SVM
     Wrapper script to run an SVM classifier with a linear kernel on a benchmark dataset with 5-fold cross validation,
@@ -22,13 +23,23 @@ def SVM_prediction(reference_H5AD, query_H5AD, LabelsPathTrain, OutputDir, rejec
         cells-genes matrix with cell unique barcodes as row names and gene names as column names.
     LabelsPathTrain : Cell population annotations file path matching the training data (.csv).
     OutputDir : Output directory defining the path of the exported file.
-    rejected: If set to True, then the SVMrejected option is chosen. Default: False.
+    rejected: If the flag is added, then the SVMrejected option is chosen. Default: False.
     Threshold_rej : Threshold used when rejecting the cells, default is 0.7.
+    meta_atlas : If the flag is added the predictions will use the corneal meta-atlas data,
+    meaning that reference_H5AD and LabelsPathTrain do not need to be specified.
     '''
     print("Reading in the reference and query H5AD objects")
-    training=read_h5ad(reference_H5AD)
-    testing=read_h5ad(query_H5AD)
     
+    # Load in the cma.h5ad object or use a different reference
+    if meta_atlas==False:
+        training=read_h5ad(reference_H5AD) 
+    if meta_atlas==True:
+        meta_dir=files('cma.data').joinpath('cma_meta_atlas.h5ad')
+        training=read_h5ad(meta_dir) 
+
+    # Load in the test data
+    testing=read_h5ad(query_H5AD)
+ 
     print("Generating training and testing matrices from the H5AD objects")
     
     # training data
@@ -66,6 +77,11 @@ def SVM_prediction(reference_H5AD, query_H5AD, LabelsPathTrain, OutputDir, rejec
     # read the data
     data_train = matrix_train2
     data_test = matrix_test2
+    
+    # If meta_atlas=True it will read the training_labels
+    if meta_atlas==True:
+        LabelsPathTrain = files('cma.data').joinpath('training_labels_meta.csv')
+    
     labels_train = pd.read_csv(LabelsPathTrain, header=0,index_col=None, sep=',')
         
     # Set threshold for rejecting cells
@@ -114,13 +130,14 @@ def main():
     parser = argparse.ArgumentParser(description='Run SVM prediction')
 
     # Add arguments
-    parser.add_argument('reference_H5AD', type=str, help='Path to reference H5AD file')
-    parser.add_argument('query_H5AD', type=str, help='Path to query H5AD file')
-    parser.add_argument('LabelsPathTrain', type=str, help='Path to cell population annotations file')
-    parser.add_argument('OutputDir', type=str, help='Path to output directory')
+    parser.add_argument('--reference_H5AD', type=str, help='Path to reference H5AD file')
+    parser.add_argument('--query_H5AD', type=str, help='Path to query H5AD file')
+    parser.add_argument('--LabelsPathTrain', type=str, help='Path to cell population annotations file')
+    parser.add_argument('--OutputDir', type=str, help='Path to output directory')
 
     parser.add_argument('--rejected', dest='rejected', action='store_true', help='Use SVMrejected option')
     parser.add_argument('--Threshold_rej', type=float, default=0.7, help='Threshold used when rejecting cells, default is 0.7')
+    parser.add_argument('--meta_atlas', dest='meta_atlas', action='store_true', help='Use meta_atlas data')
 
     # Parse the arguments
     args = parser.parse_args()
@@ -130,7 +147,7 @@ def main():
         os.makedirs(args.OutputDir)
 
     # Call the svm_prediction function with the parsed arguments
-    SVM_prediction(args.reference_H5AD, args.query_H5AD, args.LabelsPathTrain, args.OutputDir, args.rejected, args.Threshold_rej)
+    SVM_prediction(args.reference_H5AD, args.query_H5AD, args.LabelsPathTrain, args.OutputDir, args.rejected, args.Threshold_rej, args.meta_atlas)
 
 if __name__ == '__main__':
     main()
