@@ -11,6 +11,6 @@ setup(
             'SVM_prediction=cma.SVM_prediction:main'
         ]
     },
-    install_requires=['h5py','numpy','pandas','scikit-learn','scanpy','rpy2','importlib-resources'],
+    install_requires=['python-build','h5py','numpy','pandas','scikit-learn','scanpy','rpy2','importlib-resources'],
     package_data={"cma.data": ["*.csv", "*.h5ad"]},
 )
