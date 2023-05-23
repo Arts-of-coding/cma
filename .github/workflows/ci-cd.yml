@@ -33,6 +33,6 @@ jobs:
 
     - name: Install Python dependencies
       run: py-actions/py-dependency-install@v4
-      with:
-        path: "pyproject.toml"
+      #with:
+        #path: "pyproject.toml"
 # TO DO: write unit tests and add Codecov
