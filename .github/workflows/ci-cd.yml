@@ -30,6 +30,9 @@ jobs:
 
     - name: Install Python dependencies
       uses: py-actions/py-dependency-install@v4
+
+    - name: Build wheel of package
+      run: python -m build
       #with:
         #path: "pyproject.toml"
 # TO DO: write unit tests and add Codecov
