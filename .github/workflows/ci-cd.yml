@@ -32,7 +32,10 @@ jobs:
       uses: py-actions/py-dependency-install@v4
 
     - name: Build wheel of package
-      run: pip3 wheel .
+      run: python -m pip wheel --wheel-dir=dist
+      
+    - name: Install wheel of package
+      run: pip install dist/cma-0.0.1-py3-none-any.whl
       #with:
         #path: "pyproject.toml"
 # TO DO: write unit tests and add Codecov
