@@ -28,9 +28,11 @@ jobs:
     - name: Check-out repository
       uses: actions/checkout@v2
 
-    - name: Install poetry
-      uses: snok/install-poetry@v1
+    - name: Install Python dependencies
+      uses: py-actions/py-dependency-install@v4
 
-    - name: Install package
-      run: poetry install
+    - name: Install Python dependencies
+      run: py-actions/py-dependency-install@v4
+      with:
+        path: "pyproject.toml"
 # TO DO: write unit tests and add Codecov
