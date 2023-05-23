@@ -31,11 +31,14 @@ jobs:
     - name: Install Python dependencies
       uses: py-actions/py-dependency-install@v4
 
+    # Builds a wheel needed for the CD part
     - name: Build wheel of package
       run: python -m pip wheel . --wheel-dir=dist
       
+    # Tests if the actual wheel file is functional
     - name: Install wheel of package
-      run: pip install dist/cma-0.0.1-py3-none-any.whl
-      #with:
-        #path: "pyproject.toml"
+      run: pip install dist/cma-0.0.1-py3-none-any.whl --force-reinstall
+    
+    # Running unit tests
+
 # TO DO: write unit tests and add Codecov
