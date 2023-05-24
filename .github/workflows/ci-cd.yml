@@ -41,6 +41,6 @@ jobs:
     
     # Running unit tests
     - name: Running unit tests    
-      run: pytest cma/tests/ --cov=pycounts --cov-report=xml
+      run: pytest cma/tests/ --cov=cma --cov-report=xml
 
 # TO DO: write unit tests and add Codecov
