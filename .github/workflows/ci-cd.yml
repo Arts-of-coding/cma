@@ -38,7 +38,11 @@ jobs:
     # Tests if the actual wheel file is functional
     - name: Install wheel of package
       run: pip install dist/cma-0.0.1-py3-none-any.whl --force-reinstall
-    
+      
+    # Print current files
+    - name: Print current directory   
+      run: ls -a
+      
     # Running unit tests
     - name: Running unit tests    
       run: pytest cma/tests/ --cov=cma --cov-report=xml
