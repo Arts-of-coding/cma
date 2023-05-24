@@ -16,7 +16,7 @@ from importlib_resources import files
 import subprocess
 
 # Import test data
-query = files('cma.data').joinpath('small_test.h5ad')
+query = "data/small_test.h5ad"
 reference=files('cma.data').joinpath('cma_meta_atlas.h5ad')
 labels = files('cma.data').joinpath('training_labels_meta.csv')
 od="test_output/"
