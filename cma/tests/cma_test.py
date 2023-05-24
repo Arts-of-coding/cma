@@ -17,11 +17,11 @@ import subprocess
 
 # Import test data
 query = "data/small_test.h5ad"
-reference=files('cma.data').joinpath('cma_meta_atlas.h5ad')
-labels = files('cma.data').joinpath('training_labels_meta.csv')
+reference="data/cma_meta_atlas.h5ad"
+labels = "data/training_labels_meta.csv"
 od="test_output/"
 
 def test_SVM_prediction():
-    command_to_be_executed = ['SVM_prediction', '--query_H5AD',  str(query), '--OutputDir', str(od), '--meta_atlas']
+    command_to_be_executed = ['--reference_H5AD',  str(reference), 'SVM_prediction', '--query_H5AD',  str(query), '--LabelsPathTrain',  str(labels), '--OutputDir', str(od)]
     subprocess.check_output(command_to_be_executed, shell=False)
     assert os.path.exists("test_output/SVM_Pred_Labels.csv") == 1
