@@ -40,8 +40,8 @@ jobs:
       run: pip install dist/cma-0.0.1-py3-none-any.whl --force-reinstall
       
     # Print current files
-    - name: Print current directory   
-      run: ls -a
+    - name: Print data directory   
+      run: ls cma/data/ -a
       
     # Running unit tests
     - name: Running unit tests    
