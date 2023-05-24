@@ -22,6 +22,6 @@ labels = "data/training_labels_meta.csv"
 od="test_output/"
 
 def test_SVM_prediction():
-    command_to_be_executed = ['--reference_H5AD',  str(reference), 'SVM_prediction', '--query_H5AD',  str(query), '--LabelsPathTrain',  str(labels), '--OutputDir', str(od)]
+    command_to_be_executed = ['SVM_prediction', '--reference_H5AD',  str(reference), '--query_H5AD',  str(query), '--LabelsPathTrain',  str(labels), '--OutputDir', str(od)]
     subprocess.check_output(command_to_be_executed, shell=False)
     assert os.path.exists("test_output/SVM_Pred_Labels.csv") == 1
