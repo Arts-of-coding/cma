@@ -16,9 +16,9 @@ from importlib_resources import files
 import subprocess
 
 # Import test data
-query = "data/small_test.h5ad"
-reference="data/cma_meta_atlas.h5ad"
-labels = "data/training_labels_meta.csv"
+query = "cma/data/small_test.h5ad"
+reference="cma/data/cma_meta_atlas.h5ad"
+labels = "cma/data/training_labels_meta.csv"
 od="test_output/"
 
 def test_SVM_prediction():
