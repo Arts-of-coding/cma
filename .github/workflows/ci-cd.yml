@@ -40,5 +40,7 @@ jobs:
       run: pip install dist/cma-0.0.1-py3-none-any.whl --force-reinstall
     
     # Running unit tests
+    - name: Running unit tests    
+      run: pytest tests/ --cov=pycounts --cov-report=xml
 
 # TO DO: write unit tests and add Codecov
