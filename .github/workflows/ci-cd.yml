@@ -26,6 +26,16 @@ jobs:
     container: node:latest
     # service containers to run with `postgres-job`
     steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+
+      - name: Install Python dependencies
+        uses: py-actions/py-dependency-install@v4
+
+      # Builds a wheel needed for the CD part
+      - name: Build wheel of package
+        run: pip wheel --no-deps -w dist .
+        
       - uses: conda-incubator/setup-miniconda@v2
         with:
           miniconda-version: "latest"
@@ -43,19 +53,9 @@ jobs:
               echo "after conda activate cma: PATH=$PATH;"
               which cma || true
               # Use cma in ci-cd workflow
-
-      - name: Check-out repository
-        uses: actions/checkout@v2
-
-      #- name: Install Python dependencies
-      #  uses: py-actions/py-dependency-install@v4
-
-      # Builds a wheel needed for the CD part
-      - name: Build wheel of package
-        run: pip wheel --no-deps -w dist .
       
       # Tests if the actual wheel file is functional
-      - name: Install wheel of package
+      - name: Install wheel of package into conda env
         run: pip install dist/cma-0.0.1-py3-none-any.whl --force-reinstall
 
       # Remove files
