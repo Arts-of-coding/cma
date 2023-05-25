@@ -22,6 +22,7 @@ adata = sc.read_h5ad("cma_meta_atlas.h5ad")
 adata = adata[0:1000,:]
 adata.var.index=adata.var["_index"]
 del adata.var["_index"]
+del adata.raw
 adata.write_h5ad("small_cma_meta_atlas.h5ad")
 
 reference="small_cma_meta_atlas.h5ad"
