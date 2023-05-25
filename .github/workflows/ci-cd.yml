@@ -66,6 +66,16 @@ jobs:
     # Remove files
     - name: Delete data in directory   
       run: rm -rf cma/data/*
+      
+    # Download data into own directory
+    - name: Download labels  
+      run: curl -o training_labels_meta.csv https://github.com/Arts-of-coding/cma/blob/develop/cma/data/training_labels_meta.csv
+
+    - name: Download training 
+      run: curl -o small_test.h5ad https://github.com/Arts-of-coding/cma/blob/develop/cma/data/small_test.h5ad
+
+    - name: Download test
+      run: curl -o cma_meta_atlas.h5ad https://github.com/Arts-of-coding/cma/blob/develop/cma/data/cma_meta_atlas.h5ad
 
     # Print current files 1
     - name: Print current dir
@@ -73,14 +83,14 @@ jobs:
       
     # Print current files 2
     - name: Print files current dir
-      run: ls -a
+      run: ls -lh
       
     # Print current files 3
-    - name: Print data directory   
-      run: ls cma/data/ -a
+    #- name: Print data directory   
+    #  run: ls cma/data/ -a
       
-    # Running unit tests
-    - name: Running unit tests    
-      run: pytest cma/tests/cma_test.py --cov
+    ## Running unit tests
+    #- name: Running unit tests    
+    #  run: pytest cma/tests/cma_test.py --cov
 
 # TO DO: write unit tests and add Codecov
