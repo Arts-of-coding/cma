@@ -66,8 +66,16 @@ jobs:
     # Remove files
     - name: Delete data in directory   
       run: rm -rf cma/data/*
+
+    # Print current files 1
+    - name: Print current dir
+      run: pwd
       
-    # Print current files
+    # Print current files 2
+    - name: Print files current dir
+      run: ls -a
+      
+    # Print current files 3
     - name: Print data directory   
       run: ls cma/data/ -a
       
