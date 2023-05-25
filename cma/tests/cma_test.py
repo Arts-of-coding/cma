@@ -38,5 +38,5 @@ od="test_output/"
 
 def test_SVM_prediction():
     command_to_be_executed = ['SVM_prediction', '--reference_H5AD',  str(reference), '--query_H5AD',  str(query), '--LabelsPathTrain',  str(labels), '--OutputDir', str(od)]
-    subprocess.check_output(command_to_be_executed, shell=False)
+    subprocess.run(command_to_be_executed, shell=False, timeout=None, text=True)
     assert os.path.exists("test_output/SVM_Pred_Labels.csv") == 1
