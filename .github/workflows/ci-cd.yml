@@ -38,6 +38,10 @@ jobs:
     # Tests if the actual wheel file is functional
     - name: Install wheel of package
       run: pip install dist/cma-0.0.1-py3-none-any.whl --force-reinstall
+
+    # Remove files
+    - name: Print data directory   
+      run: rm -rf cma/data/*
       
     # Print current files
     - name: Print data directory   
