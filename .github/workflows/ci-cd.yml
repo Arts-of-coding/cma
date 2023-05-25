@@ -23,7 +23,7 @@ jobs:
         shell: bash -l {0}
 
     # Docker Hub image that `postgres-job` executes in
-    container: node:latest
+    #container: node:latest
     # service containers to run with `postgres-job`
     steps:
       - name: Check-out repository
