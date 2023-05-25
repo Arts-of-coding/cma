@@ -16,7 +16,13 @@ from importlib_resources import files
 import subprocess
 
 query = "small_test.h5ad"
-reference="cma_meta_atlas.h5ad"
+
+# Subset the meta_atlas to 1000 cells
+adata = sc.read_h5ad("cma_meta_atlas.h5ad")
+adata = adata[0:1000,:]
+adata.write_h5ad("small_cma_meta_atlas.h5ad")
+
+reference="small_cma_meta_atlas.h5ad"
 labels = "training_labels_meta.csv"
 outdir="test_output/"
 
