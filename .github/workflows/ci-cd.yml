@@ -47,8 +47,8 @@ jobs:
       - name: Check-out repository
         uses: actions/checkout@v2
 
-      - name: Install Python dependencies
-        uses: py-actions/py-dependency-install@v4
+      #- name: Install Python dependencies
+      #  uses: py-actions/py-dependency-install@v4
 
       # Builds a wheel needed for the CD part
       - name: Build wheel of package
