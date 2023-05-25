@@ -62,10 +62,6 @@ jobs:
     # Tests if the actual wheel file is functional
     - name: Install wheel of package into conda env
       run: pip install dist/cma-0.0.1-py3-none-any.whl --force-reinstall
-
-    # Remove files
-    - name: Delete data in directory   
-      run: rm -rf cma/data/*
       
     # Download data into own directory
     - name: Download labels  
@@ -77,14 +73,11 @@ jobs:
     - name: Download test
       run: curl -o cma_meta_atlas.h5ad https://zenodo.org/record/7970737/files/cma_meta_atlas.h5ad?download=1
 
-    # Print current files 1
-    - name: Print current dir
-      run: pwd
+    # Trim labels for small unit test
+    - name: Trim labels for unit test
+      run: sed -i 1001q training_labels_meta.csv
       
-    # Print current files 2
-    - name: Print files current dir
-      run: ls -lh
-      
+    # Pre-process 
     # Running unit tests
     - name: Running unit tests    
       run: pytest cma/tests/cma_test.py --cov
