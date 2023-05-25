@@ -16,6 +16,21 @@ from importlib_resources import files
 import subprocess
 
 # Import test data
+data_dir="cma/data/training_labels_meta.csv"
+link="https://github.com/Arts-of-coding/cma/blob/develop/cma/data/training_labels_meta.csv"
+command_to_be_executed = ['curl', '-o',  str(data_dir),  str(link)]
+subprocess.check_output(command_to_be_executed, shell=False)
+
+data_dir="cma/data/small_test.h5ad"
+link="https://github.com/Arts-of-coding/cma/blob/develop/cma/data/small_test.h5ad"
+command_to_be_executed = ['curl', '-o',  str(data_dir),  str(link)]
+subprocess.check_output(command_to_be_executed, shell=False)
+
+data_dir="cma/data/cma_meta_atlas.h5ad"
+link="https://github.com/Arts-of-coding/cma/blob/develop/cma/data/cma_meta_atlas.h5ad"
+command_to_be_executed = ['curl', '-o',  str(data_dir),  str(link)]
+subprocess.check_output(command_to_be_executed, shell=False)
+
 query = "cma/data/small_test.h5ad"
 reference="cma/data/cma_meta_atlas.h5ad"
 labels = "cma/data/training_labels_meta.csv"
