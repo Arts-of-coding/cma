@@ -58,7 +58,7 @@ jobs:
       - name: Install wheel of package
         run: pip install dist/cma-0.0.1-py3-none-any.whl --force-reinstall
 
-      	# Remove files
+      # Remove files
       - name: Delete data in directory   
         run: rm -rf cma/data/*
       
