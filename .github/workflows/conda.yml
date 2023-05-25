@@ -27,7 +27,7 @@ jobs:
         run: |
             echo "begin: PATH=$PATH;"
 
-            conda create -y --name cma pip
+            conda create -y --name cma pip python=3.9
 
             conda activate cma || true
             echo "after conda activate cma: PATH=$PATH;"
