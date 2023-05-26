@@ -1,6 +1,6 @@
 [build-system]
 build-backend = "setuptools.build_meta"
-requires = ["setuptools", "wheel", "python-build"]
+requires = ["setuptools", "wheel", "python-build", "pytest-cov"]
 
 #[tool.setuptools.package-data]
 #"cma.data" = ["*.csv", "*.h5ad"]

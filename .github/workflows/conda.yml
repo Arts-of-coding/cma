@@ -1,0 +1,35 @@
+name: Conda
+on: [push]
+
+jobs:
+  # label of the job
+  tests:
+    name: Tests
+    # containers must run in Linux based operating systems
+    runs-on: ubuntu-latest
+    # Do not ignore bash profile files. From:
+    # https://github.com/marketplace/actions/setup-miniconda
+    defaults:
+      run:
+        shell: bash -l {0}
+    # Docker Hub image that `postgres-job` executes in
+    container: node:latest
+    # service containers to run with `postgres-job`
+    steps:
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          miniconda-version: "latest"
+          channels: bioconda, conda-forge, defaults
+          use-only-tar-bz2: true  # IMPORTANT: This needs to be set for caching to work properly!
+          auto-update-conda: true
+          auto-activate-base: true
+      - name: Install cma pip
+        run: |
+            echo "begin: PATH=$PATH;"
+
+            conda create -y --name cma pip python=3.9
+
+            conda activate cma || true
+            echo "after conda activate cma: PATH=$PATH;"
+            which cma || true
+            # Use cma in ci-cd workflow
