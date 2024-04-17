@@ -6,29 +6,16 @@ Usage
 Installation
 ------------
 
-To use Lumache, first install it using pip:
+To use cPredictor, first install it using pip:
 
 .. code-block:: console
 
-   (.venv) $ pip install lumache
+   (.venv) $ pip install cPredictor
 
-Creating recipes
+Docker
 ----------------
 
-To retrieve a list of random ingredients,
-you can use the ``lumache.get_random_ingredients()`` function:
+.. code-block:: console
 
-.. autofunction:: lumache.get_random_ingredients
-
-The ``kind`` parameter should be either ``"meat"``, ``"fish"``,
-or ``"veggies"``. Otherwise, :py:func:`lumache.get_random_ingredients`
-will raise an exception.
-
-.. autoexception:: lumache.InvalidKindError
-
-For example:
-
->>> import lumache
->>> lumache.get_random_ingredients()
-['shells', 'gorgonzola', 'parsley']
-
+   $ docker pull artsofcoding/cpredictor:latest
+   $ docker tag artsofcoding/cpredictor:latest cpredictor

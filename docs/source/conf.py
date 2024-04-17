@@ -2,12 +2,12 @@
 
 # -- Project information
 
-project = 'Lumache'
-copyright = '2021, Graziella'
-author = 'Graziella'
+project = 'cPredictor'
+copyright = '2021, Arts-of-coding'
+author = 'Arts-of-coding (J. Arts)'
 
-release = '0.1'
-version = '0.1.0'
+release = '0.3.2'
+version = '0.3.2'
 
 # -- General configuration
 
