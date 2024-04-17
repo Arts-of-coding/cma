@@ -1,12 +1,14 @@
 Welcome to cPredictor's documentation!
 ===================================
 
-**cPredictor** is a Python library for ...
+**cPredictor** is a Python library for easy machine learning predictions on query single-cell objects (h5ad files). 
+At this moment, only the cornea meta-atlas has been implemented.
 
 Check out the :doc:`usage` section for further information, including
 how to :ref:`installation` the project.
 
-Check  the :doc:`instructions` section for ....
+Check the :doc:`instructions` section for how to use the :ref:`CLI commands`, as well as on how to use :ref:`Docker`containers directly. 
+Here there is also documentation on how to manually :ref:`Downloading atlases` and on how to use them with cPredictor.
 
 .. note::
 
